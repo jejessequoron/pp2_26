@@ -79,4 +79,3 @@ class Person:
 p1 = Person("Emil")
 del Person.greet
 p1.greet() # This will cause an error
-
