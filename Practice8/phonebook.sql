@@ -14,6 +14,7 @@ RETURNS TABLE (
     surname VARCHAR,
     phone VARCHAR
 )
+LANGUAGE plpgsql
 AS $$
 BEGIN
     RETURN QUERY
@@ -24,7 +25,7 @@ BEGIN
        OR p.phone ILIKE '%' || pattern || '%'
     ORDER BY p.id;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 
 
@@ -36,6 +37,7 @@ CREATE OR REPLACE PROCEDURE ins_upd_user(
     p_surname VARCHAR,
     p_phone VARCHAR
 )
+LANGUAGE plpgsql
 AS $$
 BEGIN
     IF EXISTS (
@@ -51,7 +53,7 @@ BEGIN
         VALUES (p_name, p_surname, p_phone);
     END IF;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 
 
@@ -110,6 +112,7 @@ RETURNS TABLE (
     surname VARCHAR,
     phone VARCHAR
 )
+LANGUAGE plpgsql
 AS $$
 BEGIN
     RETURN QUERY
@@ -119,7 +122,7 @@ BEGIN
     LIMIT p_lim
     OFFSET p_ofs;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 
 
@@ -127,6 +130,7 @@ $$ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE PROCEDURE del_user(p_value VARCHAR)
+LANGUAGE plpgsql
 AS $$
 BEGIN
     DELETE FROM phb
@@ -134,4 +138,4 @@ BEGIN
        OR surname = p_value
        OR phone = p_value;
 END;
-$$ LANGUAGE plpgsql;
+$$;
