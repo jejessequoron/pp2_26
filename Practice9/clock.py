@@ -20,7 +20,7 @@ font = pygame.font.SysFont(None, 48)
 CENTER = (WIDTH // 2, HEIGHT // 2)
 
 sim = pygame.image.load("spongy.png").convert_alpha()
-sim = pygame.transform.smoothscale(sim, (700, 700))
+sim = pygame.transform.smoothscale(sim, (850, 700))
 
 def draw_hand(surface, center, length, angle_deg, color, thickness):
     angle_rad = math.radians(angle_deg - 90)
