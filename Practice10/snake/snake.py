@@ -16,11 +16,11 @@ colorGRAY = (200, 200, 200)
 colorBLACK = (0, 0, 0)
 colorRED = (255, 0, 0)
 colorGREEN = (0, 255, 0)
-colorBLUE = (0, 0, 255)
 colorYELLOW = (255, 255, 0)
 
 CELL = 30
 font = pygame.font.SysFont(None, 36)
+large_font = pygame.font.SysFont(None, 48)
 
 def draw_grid():
     for i in range(HEIGHT // CELL):
@@ -31,9 +31,6 @@ class Point:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-
-    def __str__(self):
-        return f"{self.x}, {self.y}"
 
 class Snake:
     def __init__(self):
@@ -51,10 +48,11 @@ class Snake:
 
         head = self.body[0]
         if head.x >= WIDTH // CELL or head.x < 0 or head.y >= HEIGHT // CELL or head.y < 0:
-            return False
+            return False 
+
         for segment in self.body[1:]:
             if head.x == segment.x and head.y == segment.y:
-                return False
+                return False 
         return True
 
     def draw(self):
@@ -89,7 +87,7 @@ class Food:
                     break
             
             if not on_snake:
-                break
+                break 
 
 FPS = 5
 clock = pygame.time.Clock()
@@ -110,19 +108,29 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.KEYDOWN and not game_over:
-            if event.key == pygame.K_RIGHT and snake.dx != -1:
-                snake.dx = 1
-                snake.dy = 0
-            elif event.key == pygame.K_LEFT and snake.dx != 1:
-                snake.dx = -1
-                snake.dy = 0
-            elif event.key == pygame.K_DOWN and snake.dy != -1:
-                snake.dx = 0
-                snake.dy = 1
-            elif event.key == pygame.K_UP and snake.dy != 1:
-                snake.dx = 0
-                snake.dy = -1
+            
+        if event.type == pygame.KEYDOWN:
+            if not game_over:
+                if event.key == pygame.K_RIGHT and snake.dx != -1:
+                    snake.dx = 1
+                    snake.dy = 0
+                elif event.key == pygame.K_LEFT and snake.dx != 1:
+                    snake.dx = -1
+                    snake.dy = 0
+                elif event.key == pygame.K_DOWN and snake.dy != -1:
+                    snake.dx = 0
+                    snake.dy = 1
+                elif event.key == pygame.K_UP and snake.dy != 1:
+                    snake.dx = 0
+                    snake.dy = -1
+            else:
+                if event.key == pygame.K_SPACE:
+                    snake = Snake()
+                    score = 0
+                    level = 1
+                    FPS = 5
+                    game_over = False
+                    food.generate_random_pos(snake.body)
 
     screen.fill(colorBLACK)
 
@@ -135,8 +143,7 @@ while running:
             food.generate_random_pos(snake.body)
             if score % foods_to_next_level == 0:
                 level += 1
-                FPS += 2
-
+                FPS += 2 
         draw_grid()
         snake.draw()
         food.draw()
@@ -144,8 +151,12 @@ while running:
         screen.blit(score_text, (10, 10))
 
     else:
-        game_over_text = font.render(f"GAME OVER! Final Score: {score}", True, colorRED)
-        screen.blit(game_over_text, (WIDTH // 2 - 150, HEIGHT // 2))
+        game_over_text = large_font.render("GAME OVER!", True, colorRED)
+        score_text = font.render(f"Final Score: {score}", True, colorWHITE)
+        play_again_text = font.render("Press SPACE to Play Again", True, colorYELLOW)
+        screen.blit(game_over_text, (WIDTH // 2 - game_over_text.get_width() // 2, HEIGHT // 2 - 50))
+        screen.blit(score_text, (WIDTH // 2 - score_text.get_width() // 2, HEIGHT // 2))
+        screen.blit(play_again_text, (WIDTH // 2 - play_again_text.get_width() // 2, HEIGHT // 2 + 50))
 
     pygame.display.flip()
     clock.tick(FPS)
